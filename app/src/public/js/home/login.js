@@ -20,5 +20,15 @@ function login() {
         body: JSON.stringify(req),
     })
         .then((res) => res.json())
-        .then((res) => console.log(res));
-}
+        .then((res) => {
+            if (res.success) {
+                location.href = "/";
+            }   else   {
+                alert(res.msg);
+            }
+        })
+        .catch((err) => {
+            console.error(new Error("로그인 중 에러 발생"));  // 에러난 것을 알려줌 (비밀번호가 틀려서가아니라 코드에서 문제 생겼을 때를 말하는 것 같음 잘 모름)
+        })
+
+    }       

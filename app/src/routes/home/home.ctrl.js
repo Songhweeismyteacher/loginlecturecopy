@@ -24,13 +24,13 @@ const process = {
             if (users.psword[idx] === psword) {
                 return res.json({
                     success: true,
-                });
+                });                             //로그인에 성공하면 success값 true
             }
         }
 
         return res.json({
             success: false,
-            msg: "로그인에 실패하셨습니다.",
+            msg: "로그인에 실패하셨습니다.",     // 실패하면 success값 false, 메시지 보내기
         });
     },
 };
