@@ -17,5 +17,18 @@ class UserStorage {
         }, {});   
         return newUsers;                                                   //이부분 하나도 알겠음 20강 돌려서 보기
     }
+
+    static getUserInfo(id) {
+        const users = this.#users;
+        const idx = users.id.indexOf(id);
+        const userkeys = Object.keys(users);
+        const userInfo = userkeys.reduce((newUser, info) => {
+            newUser[info] = users[info][idx];
+            return newUser;
+        }, {});
+
+        return userInfo;
+    }
 }
+
 module.exports = UserStorage; 
