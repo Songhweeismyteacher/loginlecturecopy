@@ -18,5 +18,7 @@ function login() {
             "content-type": "application/json",   //json형식이라고 알려줌
         },
         body: JSON.stringify(req),
-    });
+    })
+        .then((res) => res.json())
+        .then((res) => console.log(res));
 }
