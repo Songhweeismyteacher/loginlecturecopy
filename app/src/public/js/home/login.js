@@ -8,8 +8,15 @@ loginBtn.addEventListener("click", login);
 
 function login() {
     const req = {
-    id: id.value,
-    psword: psword.value,      //  버튼을 클릭하면 로그인과 패스워드창에 입력한 값을 받음
+        id: id.value,
+       psword: psword.value,      //  버튼을 클릭하면 로그인과 패스워드창에 입력한 값을 받음
     };
-    console.log(req);
+
+    fetch("/login", {
+        method: "POST",
+        headers: {
+            "content-type": "application/json",   //json형식이라고 알려줌
+        },
+        body: JSON.stringify(req),
+    });
 }
