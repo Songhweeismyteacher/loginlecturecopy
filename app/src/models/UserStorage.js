@@ -1,28 +1,13 @@
-"use strict"
+"use strict";
+
+const fs = require("fs").promises;
 
 class UserStorage {
-    static #users = {                            // class 안에 선언할 때 const 같은 선언자? 필요없음 class -> 객체를 생성하기 위한 템플릿, #앞에 써주면 외부에서 불러올 수 없음
-        id: ["woorimIT", "나개발", "김팀장"],
-        psword: ["1234", "1234", "123456"],
-        name: ["우리밋", "나개발", "김팀장"],
-    };
-
-    static getusers(...fields) {                                 //class 자체에서 메서드에접근 하려면 static을 붙여줘야 함. 
-        const users = this.#users;
-        const newUsers = fields.reduce((newUsers, field) => {
-            if (users.hasOwnProperty(field)) {
-                newUsers[field] = users[field];
-            }
-            return newUsers;
-        }, {});   
-        return newUsers;                                                   //이부분 하나도 알겠음 20강 돌려서 보기
-    }
-
-    static getUserInfo(id) {
-        const users = this.#users;
+    static #getUserInfo(data, id) {
+        const users = JSON.parse(data);
         const idx = users.id.indexOf(id);
-        const userkeys = Object.keys(users);
-        const userInfo = userkeys.reduce((newUser, info) => {
+        const usersKeys = Object.keys(users); // => [id, psword, name]
+        const userInfo = usersKeys.reduce((newUser, info) => {
             newUser[info] = users[info][idx];
             return newUser;
         }, {});
@@ -30,13 +15,47 @@ class UserStorage {
         return userInfo;
     }
 
-    static save(userInfo) {
-        const users = this.#users;
+    static #getUsers(data, isAll, fields) {
+        const users = JSON.parse(data);
+        if (isAll) return users;
+
+        const newUsers = fields.reduce((newUsers, field) => {
+            if (users.hasOwnProperty(data, fields)) {
+                newUsers[field] = users[field];
+            }
+            return newUsers;
+        }, {});
+        return newUsers;
+    }
+
+    static getUsers(isAll, ...fields) {
+        return fs
+            .readFile("./src/databases/users.json")
+            .then((data) => {
+                return this.#getUsers(data, isAll, fields);
+            })
+            .catch(console.error);
+    }
+
+    static getUserInfo(id) {
+        return fs
+            .readFile("./src/databases/users.json")
+            .then((data) => {
+                return this.#getUserInfo(data, id);
+            })
+            .catch(console.error);
+    }
+
+    static async save(userInfo) {
+        const users = await this.getUsers(true);
+        if (users.id.includes(userInfo.id)) {
+            throw "이미 존재하는 아이디입니다.";
+        } 
         users.id.push(userInfo.id);
         users.name.push(userInfo.name);
         users.psword.push(userInfo.psword);
+        fs.writeFile("./src/databases/users.json", JSON.stringify(users)); // 첫번째 파라미터 -> 저장 할 파일의 경로 두번 째 파라미터 -> 저장할 데이터  
         return { success: true };
     }
 }
-
-module.exports = UserStorage; 
+module.exports = UserStorage;
