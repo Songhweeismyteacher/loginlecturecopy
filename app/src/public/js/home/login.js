@@ -2,7 +2,7 @@
 
 const id = document.querySelector("#id"), // 선택자(html 관련)
     psword = document.querySelector("#psword"), // 선택자(html 관련)
-    loginBtn = document.querySelector("button"); // button은 하나여서 #안넣음
+    loginBtn = document.querySelector("#button"); // button은 하나여서 #안넣음
 
 loginBtn.addEventListener("click", login);
 
